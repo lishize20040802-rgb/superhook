@@ -1,0 +1,5 @@
+# Enable the official Agent Teams bundle before applying this optional layer.
+- id: superhook
+  disabled: false
+- id: superhook-agent-team
+  disabled: false

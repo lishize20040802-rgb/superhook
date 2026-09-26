@@ -1,0 +1,23 @@
+{
+  "run_in_background": true,
+  "tasks": [
+    {
+      "id": "implementation",
+      "provider": "codex",
+      "prompt": "Inspect the current workspace and summarize its architecture. Do not edit files. Return concrete file references and potential testing gaps.",
+      "dependsOn": []
+    },
+    {
+      "id": "tests",
+      "provider": "kimi",
+      "prompt": "Inspect test coverage for the findings in the dependency results. Do not edit files. Propose a focused validation plan.",
+      "dependsOn": ["implementation"]
+    },
+    {
+      "id": "summary",
+      "provider": "grok",
+      "prompt": "Review the supplied findings and test plan, inspect relevant code as needed, and produce a concise prioritized action list. Do not edit files.",
+      "dependsOn": ["implementation", "tests"]
+    }
+  ]
+}

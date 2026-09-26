@@ -1,0 +1,3 @@
+# Host-wide opt-in. For per-agent access, put these rows in a copied Agent Preset instead.
+- id: superhook
+  disabled: false

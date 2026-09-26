@@ -1,0 +1,8 @@
+# Installation adds explicit entries; activate tools in the intended composition.
+- insert:
+    - id: superhook
+      name: dsh-superhook
+      disabled: true
+    - id: superhook-agent-team
+      name: dsh-superhook/agent-team
+      disabled: true

@@ -1,0 +1,16 @@
+# Install the matching official Codex bundle separately (provider name: codex).
+# Superhook includes the generic ACP package used by Kimi.
+# Login to each CLI interactively before delegating. No credentials belong here.
+- insert:
+    - id: superhook-kimi
+      name: '@deepseek-ai/dsh-subagent-acp'
+      config:
+        providerName: kimi
+        command: kimi
+        args: [acp]
+        permission: reject
+    - id: superhook-grok
+      name: dsh-superhook/grok
+      config:
+        providerName: grok
+        permission: reject
