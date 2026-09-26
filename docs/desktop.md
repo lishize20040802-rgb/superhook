@@ -45,6 +45,18 @@ Grok 使用原生缓存登录。Codex 使用官方 Bundle 自带的 CLI 与原�
 
 先分别运行只返回固定文本的短任务，再验证目标工作区的实际代码任务。检查结果、取消和进程回收；仅看到 provider 已注册不能证明模型调用成功。
 
+团队消息和任务板通过 MCP 工作，与 Codex 原生 `exec_command` / `apply_patch` 是不同通道。团队工具可用不能证明本地文件与命令执行可用。Windows 上可在安装了依赖的源码目录运行下面的无模型探针，检查实际配置的同一份官方 Codex：
+
+```powershell
+node scripts/probe-codex-exec.mjs C:/path/to/codex.exe D:/path/to/workspace
+```
+
+探针使用官方 `codex sandbox` 和 DSH subprocess 服务，在目标工作区下创建独立临时目录，执行 PowerShell、读取测试文件、写回并核对内容，等进程结束后清理。它不调用模型、不读取凭证、不更改 ACL，也不关闭 sandbox。此入口针对已验证的 Windows Codex `0.153.4`；其他版本先查看 `codex help sandbox`。
+
+如果遇到 `orchestrator_helper_exit_nonzero: setup helper exited with status Some(1)`，应检查官方包清单对应的 `codex-windows-sandbox-setup.exe` 和 `codex-command-runner.exe`，不能只检查 `codex.exe`。一种已验证的原因是辅助程序继承了 Windows Low 完整性标签；错误文本本身不足以确定原因。先比较官方文件版本/哈希和 ACL，再决定修复。更改安全标签前须取得针对具体文件的授权并备份，不递归改目录，不通过关闭 sandbox 绕过问题。参见 [官方 Windows sandbox 排障](https://learn.chatgpt.com/docs/windows/windows-sandbox)。
+
+最后仍须让真实 teammate 使用原生执行工具读取测试输入，通过 `apply_patch` 修改隔离目录内的测试文件，再执行命令验证结果。固定文本回复、MCP 通道、CLI sandbox 和真实原生工具应分别记录验收结果。
+
 若 Codex 在初始化阶段退出，应检查原始启动错误、Windows 完整性级别及状态目录写入能力。不要自动更改操作系统的安全标签。DSH 的 Codex provider 支持通过 `config.env.CODEX_SQLITE_HOME` 指定独立的 SQLite 状态目录；它不改变原生登录位置，也不能修复操作系统层面的写入限制。
 
 # 持续 teammate（0.2.0）
