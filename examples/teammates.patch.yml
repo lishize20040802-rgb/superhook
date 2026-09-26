@@ -1,0 +1,23 @@
+# Enable alongside the official experimental-agent-team-profile bundle.
+- id: superhook-teammates
+  disabled: false
+  config:
+    # Absolute private Host directory; do not commit it or place it in your project.
+    stateDirectory: /absolute/path/to/dsh/storages/superhook/teammates
+    providers:
+      - name: codex
+        protocol: codex
+        command: codex
+        args: [app-server, --stdio]
+        permission: review
+      - name: kimi
+        protocol: acp
+        command: kimi
+        args: [--model, moonshot-cn/kimi-k2.7-code, acp]
+        permission: reject
+      - name: grok
+        protocol: acp
+        command: grok
+        args: [agent, --no-leader, stdio]
+        authMethod: cached_token
+        permission: reject

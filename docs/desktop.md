@@ -46,3 +46,7 @@ Grok 使用原生缓存登录。Codex 使用官方 Bundle 自带的 CLI 与原�
 先分别运行只返回固定文本的短任务，再验证目标工作区的实际代码任务。检查结果、取消和进程回收；仅看到 provider 已注册不能证明模型调用成功。
 
 若 Codex 在初始化阶段退出，应检查原始启动错误、Windows 完整性级别及状态目录写入能力。不要自动更改操作系统的安全标签。DSH 的 Codex provider 支持通过 `config.env.CODEX_SQLITE_HOME` 指定独立的 SQLite 状态目录；它不改变原生登录位置，也不能修复操作系统层面的写入限制。
+
+# 持续 teammate（0.2.0）
+
+需要让外部 agent 本身进入官方团队名单时，安装或更新 `dsh-superhook-0.2.0.tgz`，启用官方 Agent Teams profile 和 `superhook-teammates` entry，并参照 [原生 teammate 配置](teammates.md) 配置本机可执行文件与项目外的状态目录。Lead 使用 `superhook_spawn_teammate`；后续消息、任务管理及中断沿用官方工具。下文的一次性子代理配置仍然兼容，但不是持续 teammate。

@@ -1,6 +1,6 @@
 {
   "name": "dsh-superhook",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Dependency-aware agent teamwork through official DeepSeek Harness providers",
   "type": "module",
   "license": "MIT",
@@ -27,6 +27,10 @@
     "./grok": {
       "types": "./lib/grok.d.ts",
       "import": "./lib/grok.js"
+    },
+    "./teammates": {
+      "types": "./lib/teammates.d.ts",
+      "import": "./lib/teammates.js"
     }
   },
   "files": [
@@ -56,7 +60,8 @@
     "@deepseek-ai/dsh-session": "0.1.7-rc.2",
     "@deepseek-ai/dsh-subagent": "0.1.7-rc.2",
     "@deepseek-ai/dsh-subprocess": "0.1.7-rc.2",
-    "@deepseek-ai/dsh-tools": "0.1.7-rc.2"
+    "@deepseek-ai/dsh-tools": "0.1.7-rc.2",
+    "@deepseek-ai/dsh-agent": "0.1.7-rc.2"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/dsh-subprocess": {
@@ -76,8 +81,10 @@
   },
   "dependencies": {
     "@agentclientprotocol/sdk": "1.4.0",
+    "@deepseek-ai/dsh-sdk-protocol": "0.1.7-rc.2",
     "@deepseek-ai/dsh-subagent-acp": "0.1.7-rc.2",
-    "@deepseek-ai/schemastery": "3.18.4"
+    "@deepseek-ai/schemastery": "3.18.4",
+    "@modelcontextprotocol/sdk": "1.30.1"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "4.0.4",
@@ -86,12 +93,14 @@
     "@deepseek-ai/dsh-agent": "0.1.7-rc.2",
     "@deepseek-ai/dsh-agent-loop": "0.1.7-rc.2",
     "@deepseek-ai/dsh-experimental-agent-team": "0.1.7-rc.2",
+    "@deepseek-ai/dsh-experimental-tool-agent-team": "0.1.7-rc.2",
     "@deepseek-ai/dsh-jobs": "0.1.7-rc.2",
     "@deepseek-ai/dsh-jobs-local": "0.1.7-rc.2",
     "@deepseek-ai/dsh-llm": "0.1.7-rc.2",
     "@deepseek-ai/dsh-session": "0.1.7-rc.2",
     "@deepseek-ai/dsh-session-persistence-jsonl": "0.1.7-rc.2",
     "@deepseek-ai/dsh-session-projection": "0.1.7-rc.2",
+    "@deepseek-ai/dsh-session-query": "0.1.7-rc.2",
     "@deepseek-ai/dsh-subagent": "0.1.7-rc.2",
     "@deepseek-ai/dsh-subagent-codex": "0.1.7-rc.2",
     "@deepseek-ai/dsh-subprocess-local": "0.1.7-rc.2",

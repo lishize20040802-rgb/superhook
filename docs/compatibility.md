@@ -32,6 +32,18 @@ Run `node scripts/live-smoke.mjs codex`, `kimi` or `grok` for a bounded real acc
 
 ## Integration decisions
 
+### 0.2.0 durable native teammates
+
+The new `dsh-superhook/teammates` entry calls the official `spawnTeammate` service and registers continuable providers. Official member identity, persistence, mailbox, task ownership and CAS transitions remain authoritative. A public `agent/request` hook selects a registered `LlmAdapter` whose work is performed by the native CLI session; no DSH model acts as a proxy thinker.
+
+The official runtime releases idle Activations. Native processes therefore belong to the durable member under its Lead, and the private MCP endpoint rebinds to the exact live Agent on each activation. Cold native restoration uses app-server `thread/resume` or ACP `session/load`. A private, atomic state file records the native ID and delivery cursor; no unknown events are appended to official session logs.
+
+Real-account acceptance on 2026-09-26 passed for Codex 0.153.4, Kimi Code 0.31.1 with `moonshot-cn/kimi-k2.7-code`, and Grok Build 1.0.30. Each became a real official member, created/claimed/completed a task under its own name, and retained a test word across a later official message. Codex uses official automatic approval review for MCP calls. Kimi encountered a 3 RPM upstream limit; its final test passed using the documented bounded `KIMI_LOOP_MAX_ATTEMPTS_PER_STEP=80` process override. No native global credential or model configuration was changed.
+
+Codex and Grok also passed the two-turn acceptance inside the actual Desktop Host with the official Agent preset mounted: real member roster, self-owned completed task, messages to the Lead, remembered context, and successful teardown. Desktop preset interpolation exposed a missing model identity before request routing; member-scoped prompt variables now supply native identity, and both protocol tests cover that ordering. Kimi was subsequently disabled in this Desktop deployment at the user's request; optional support remains in the package.
+
+Protocol integration tests use the real official Team, continuation, persistence, query and tool services with simulated native processes. They cover multi-turn identity, memory, mailbox delivery, task ownership, interruption, native process restart/resume, and MCP authentication/scope/policy boundaries. These tests are distinct from the real-account acceptance above. Native clients' filesystem tools are not mediated by the DSH MCP tool bridge.
+
 The official generic ACP provider sends initialize and session/new without authenticate. Grok documents an explicit headless cached-token authentication step, so Superhook supplies a separate Grok provider using the official SDK and DSH subprocess owner. Kimi retains the existing generic ACP provider.
 
 The optional Teams bridge claims and completes existing official tasks using revision checks. It retains the caller's official membership, invokes Superhook through the guarded tool registry, and never creates fake external teammate sessions or independent task snapshots. On failure or a concurrent board edit, the task is left for explicit inspection.

@@ -33,6 +33,8 @@ export async function boot(t: TestContext, team = false, disableSuperhook = fals
                   config: { root: join(cwd, 'sessions'), compression: 'none' },
                 },
                 { id: 'team', name: '@deepseek-ai/dsh-experimental-agent-team' },
+                { id: 'team-tools', name: '@deepseek-ai/dsh-experimental-tool-agent-team' },
+                { id: 'query', name: '@deepseek-ai/dsh-session-query' },
                 { id: 'team-bridge', name: new URL('../src/agent-team.ts', import.meta.url).href },
               ],
             },

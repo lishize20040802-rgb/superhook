@@ -1,22 +1,37 @@
 # Superhook
 
-DSH 的多智能体协作插件，第一版 `0.1.0`。以官方 `ctx.subagents`、Jobs 和可选 Agent Teams 为基础，默认协调 Codex、Kimi Code 与 Grok Build。Claude Code 暂不启用。
+DSH 的多智能体协作插件，当前版本 `0.2.0`。让 Codex、Kimi Code 与 Grok Build 成为官方 Agent Teams 的持续 teammate，也保留一次性任务计划和 Jobs 集成。Claude Code 暂不启用。
 
 兼容基线：**DSH 0.1.7-rc.2、Cordis 4.0.4、Node.js 24+**。DSH 仍在快速迭代，不声明兼容其他预发布版本；不要通过版本豁免跳过接口检查。
 
 ## 能力
 
-| 工具                  | 用途                                                                     |
-| --------------------- | ------------------------------------------------------------------------ |
-| `superhook_agents`    | 列出配置允许的智能体以及官方 provider 注册状态；不代表已经登录           |
-| `superhook_run`       | 执行有依赖关系的任务计划，传递依赖结果并汇总；可交给官方 Jobs 在后台运行 |
-| `superhook_team_task` | 可选：认领官方 Agent Teams 任务，委派给外部智能体，成功后完成原任务      |
+| 工具                       | 用途                                                                     |
+| -------------------------- | ------------------------------------------------------------------------ |
+| `superhook_agents`         | 列出配置允许的智能体以及官方 provider 注册状态；不代表已经登录           |
+| `superhook_run`            | 执行有依赖关系的任务计划，传递依赖结果并汇总；可交给官方 Jobs 在后台运行 |
+| `superhook_team_task`      | 可选：认领官方 Agent Teams 任务，委派给外部智能体，成功后完成原任务      |
+| `superhook_spawn_teammate` | 创建由原生外部客户端驱动的真正官方 teammate，保留独立会话                |
 
-同一计划的任务串行执行。依赖失败时跳过下游，独立任务可以继续；取消停止后续任务。每个子任务释放进程后才开始下一个。不会自动重试、提交代码、回滚文件或合并分支。
+`superhook_run` 的同一计划串行执行。依赖失败时跳过下游，独立任务可以继续；取消停止后续任务。每个子任务释放进程后才开始下一个。不会自动重试、提交代码、回滚文件或合并分支。持续 teammate 则遵循官方团队的并发和任务协作规则。
 
 ## 对齐官方团队
 
-推荐在官方 Agent Teams 中使用：Lead 和 teammate 继续使用官方成员管理、消息、任务板及 Web 视图；Superhook 只提供外部执行能力。
+要让外部 agent 本身成为团队成员，启用 `dsh-superhook/teammates`，使用 [持续 teammate 配置与说明](docs/teammates.md)。Lead 调用 `superhook_spawn_teammate` 选择 `codex`、`kimi` 或 `grok`；创建由官方 `agentTeams.spawnTeammate()` 完成。
+
+成员会出现在官方 `list_agents` 和团队界面中，能够主动调用官方 `send_message`、`team_task_*`，任务的 owner 就是该外部 teammate。Lead 使用官方 `interrupt_agent` 和 `wait_agent`。DSH 的持久会话、邮箱和成员生命周期保持不变；Superhook 通过公共模型适配接口将执行接到原生 Codex App Server 或 ACP 会话。
+
+DSH 空闲时会释放成员的运行实例；Superhook 在同一 Lead 生命周期内保留外部会话，唤醒后重新绑定当前成员。插件或 Host 重启后的恢复使用原生 `thread/resume` / `session/load`，客户端不支持时明确失败，不偷偷新建失忆会话。
+
+例如对 DSH 说：
+
+> 使用官方智能体团队，通过 Superhook 创建 codex 实现者和 grok 审查者。建立任务板，划分文件范围，让成员通过官方消息沟通；后续消息继续发给已有成员，不要重新创建。
+
+Kimi 为可选支持，需要可用的原生登录和模型权限；没有订阅时不必配置或启用。
+
+### 一次性任务桥接
+
+已有的 `superhook_team_task` 仍适用于把单项任务交给一次性外部执行器：
 
 1. 用官方工具创建任务及依赖。
 2. 成员读取任务的 `id`、`revision` 和准备状态。
@@ -25,7 +40,7 @@ DSH 的多智能体协作插件，第一版 `0.1.0`。以官方 `ctx.subagents`�
 
 任务所有者仍是调用它的官方成员。Codex 等外部进程不伪装成持续 teammate。失败、取消、权限拒绝或并发编辑冲突后，已认领任务保持 `in_progress`，由成员检查改动后用官方工具释放或调整。完成仅表示外部任务正常结束，验收要求应写入任务描述；需要独立审查时另建一个有依赖的官方审查任务。
 
-`superhook_run` 也可单独使用；它的计划和结果是一次调用的数据，不另建持久化任务板。官方团队场景优先使用 `superhook_team_task`，让任务依赖由官方任务板维护。
+`superhook_run` 也可单独使用；它的计划和结果是一次调用的数据，不另建持久化任务板。需要真正成员时使用 `superhook_spawn_teammate`，不要用一次性委派代替。
 
 ## 安装与启用
 
@@ -39,7 +54,7 @@ npm run check
 npm pack
 
 dsh --version
-dsh plugin --profile web add D:/dsh-superhook/dsh-superhook-0.1.0.tgz
+dsh plugin --profile web add D:/dsh-superhook/dsh-superhook-0.2.0.tgz
 dsh plugin --profile web add @deepseek-ai/dsh-subagent-codex@0.1.7-rc.2
 ```
 
