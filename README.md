@@ -29,6 +29,8 @@ DSH 的多智能体协作插件，第一版 `0.1.0`。以官方 `ctx.subagents`�
 
 ## 安装与启用
 
+桌面端用户请先阅读 [桌面端安装与子代理配置](docs/desktop.md)。
+
 先确认目标 DSH 版本。以下命令针对 CLI 的 `web` Profile；官方 Desktop 的保留 Profile 应由 Desktop 自己的插件管理界面管理。
 
 ```powershell
